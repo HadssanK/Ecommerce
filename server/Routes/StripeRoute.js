@@ -5,7 +5,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const Striperouter = express.Router();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // ✅ secure way
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const frontendUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://ecommerce-frontend-uknj.onrender.com"
+    : "http://localhost:5173";
 
 Striperouter.post("/create-checkout-session", async (req, res) => {
   const { cartItems } = req.body;
@@ -22,20 +27,17 @@ Striperouter.post("/create-checkout-session", async (req, res) => {
           name: item.title,
           images: [item.thumbnail],
         },
-        unit_amount: Math.round(item.price * 100), // ✅ make sure it's an integer
+        unit_amount: Math.round(item.price * 100),
       },
       quantity: item.quantity || 1,
     }));
-
-    // Optional: Debug payload
-    console.log("Sending to Stripe:", JSON.stringify(line_items, null, 2));
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cart",
+      success_url: `${frontendUrl}/success`,
+      cancel_url: `${frontendUrl}/cancel`, // 👈 Optional
     });
 
     res.json({ id: session.id });
