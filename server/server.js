@@ -7,7 +7,6 @@ import authRouter from "./Routes/AuthRoute.js";
 import userRouter from "./Routes/UserRoute.js";
 import Striperouter from "./Routes/StripeRoute.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -17,18 +16,21 @@ ConnectDb();
 app.use(express.json());
 app.use(cookieParser());
 
-
+// ✅ Updated CORS
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://ecommerce-frontend-uknj.onrender.com"
+  ],
   credentials: true
 }));
-// Routes
+
+// ✅ Routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/stripe", Striperouter);
 
-
-
+// ✅ Server listen
 app.listen(port, () => {
   console.log(`Server started on PORT ${port}`);
 });

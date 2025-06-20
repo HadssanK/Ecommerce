@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const backendUrl = "http://localhost:4000";
+  const backendUrl = "https://ecommerce-backend-hljs.onrender.com";
 
   // 🔒 Check Auth State
   const getAuthState = async () => {
