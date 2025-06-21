@@ -13,6 +13,9 @@ const frontendUrl =
     : "http://localhost:5173";
 
 Striperouter.post("/create-checkout-session", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", frontendUrl); // 🔥 Add this
+  res.setHeader("Access-Control-Allow-Credentials", "true"); // 🔥 Add this too
+
   const { cartItems } = req.body;
 
   try {
@@ -37,7 +40,7 @@ Striperouter.post("/create-checkout-session", async (req, res) => {
       line_items,
       mode: "payment",
       success_url: `${frontendUrl}/success`,
-      cancel_url: `${frontendUrl}/cancel`, // 👈 Optional
+      cancel_url: `${frontendUrl}/cancel`,
     });
 
     res.json({ id: session.id });
@@ -46,5 +49,6 @@ Striperouter.post("/create-checkout-session", async (req, res) => {
     res.status(500).json({ message: "Stripe session creation failed" });
   }
 });
+
 
 export default Striperouter;
