@@ -28,7 +28,6 @@ const CartDetails = () => {
       navigate("/login");
       return;
     }
-
     addToCart(product);
   };
 

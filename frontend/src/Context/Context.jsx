@@ -15,12 +15,10 @@ export const AppProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  
   const backendUrl = import.meta.env.MODE === "development"
-      ? "http://localhost:4000"
-      :"https://ecommerce-backend-hljs.onrender.com";
+    ? "http://localhost:4000"
+    : "https://ecommerce-backend-hljs.onrender.com";
 
-  // 🔐 Check Auth State from cookie
   const getAuthState = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`, { withCredentials: true });
@@ -39,7 +37,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // 👤 Fetch logged-in user data
   const getUserData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/Data`, { withCredentials: true });
@@ -55,12 +52,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // 🟡 On mount, check login
   useEffect(() => {
     getAuthState();
   }, []);
 
-  // 🛒 Load cartItems from localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem('cartItems');
     if (storedCart) {
@@ -68,12 +63,10 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  // 💾 Save cartItems to localStorage
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 🔄 Fetch all products from DummyJSON (No Credentials!)
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -86,7 +79,6 @@ export const AppProvider = ({ children }) => {
     fetchAllData();
   }, []);
 
-  // 🔍 Filter products
   useEffect(() => {
     const filtered = data.filter((item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,10 +87,9 @@ export const AppProvider = ({ children }) => {
     setFilteredData(filtered);
   }, [data, searchTerm]);
 
-  // 📦 Fetch Single Product + Related
   const fetchProductDetails = async (id) => {
     try {
-      const response = await axios.get(`https://dummyjson.com/products/${id}`); // ❌ NO withCredentials
+      const response = await axios.get(`https://dummyjson.com/products/${id}`);
       setProduct(response.data);
 
       const allProductsResponse = await axios.get("https://dummyjson.com/products");
@@ -111,7 +102,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ➕ Add to Cart
   const addToCart = (product) => {
     setCartItems((prev) => {
       const isAlreadyInCart = prev.find(item => item.id === product.id);
@@ -120,12 +110,10 @@ export const AppProvider = ({ children }) => {
     });
   };
 
-  // ➖ Remove from Cart
   const removeFromCart = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 🔁 Update quantity
   const updateQuantity = (id, quantity) => {
     if (quantity < 1) return;
     setCartItems((prev) =>
@@ -135,13 +123,10 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  // 🗑️ Clear Cart
   const clearCart = () => {
     setCartItems([]);
     localStorage.removeItem("cartItems");
   };
-
-  // 🎯 Context Values
   const value = {
     data,
     product,
