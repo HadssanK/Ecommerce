@@ -36,8 +36,8 @@ Striperouter.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `${frontendUrl}/success`,
-      cancel_url: `${frontendUrl}/cancel`, // 👈 Optional
+      success_url: `https://ecommerce-frontend-uknj.onrender.com/success`,
+    
     });
 
     res.json({ id: session.id });
